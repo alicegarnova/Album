@@ -6,7 +6,7 @@ import { CARDS, CATEGORIES_FILTER } from "./constants";
 import { Button } from "./components/Button/Button";
 
 export const App = () => {
-  const [cards, setCards] = useState<ICard[]>(CARDS);
+  const [cards] = useState<ICard[]>(CARDS);
 
   const [page, setPage] = useState<number>(1);
 
@@ -16,22 +16,27 @@ export const App = () => {
 
   const [textFilter, setTextFilter] = useState<string>("");
 
+  const [paginationArray, setPaginationArray] = useState<number[]>([]);
+
   useEffect(() => {
-    const filterInput = cards.filter((card) => {
-      return card.title.toLowerCase().includes(textFilter.toLowerCase());
-    });
+    const filterInput =
+      textFilter !== ""
+        ? cards.filter((card) => {
+            return card.title.toLowerCase().includes(textFilter.toLowerCase());
+          })
+        : cards;
     const filteredCards = filterInput.filter((card) =>
       activeCategory === -1 ? true : card.albumId === activeCategory
     );
+
+    const newPaginationArray = [];
+    for (let i = 0; i < Math.ceil(filteredCards.length / 4); i = i + 1) {
+      newPaginationArray.push(i + 1);
+    }
+    setPaginationArray(newPaginationArray);
     const newVisibleCards = filteredCards.slice((page - 1) * 4, page * 4);
     setVisibleCards(newVisibleCards);
   }, [page, activeCategory, cards, textFilter]);
-
-  const paginationArray = [];
-
-  for (let i = 0; i < Math.ceil(cards.length / 4); i = i + 1) {
-    paginationArray.push(i + 1);
-  }
 
   return (
     <div className="body_container">
@@ -64,6 +69,9 @@ export const App = () => {
         </div>
 
         <div className="cards_container">
+          {visibleCards.length === 0 && (
+            <h4>Ничего не найдено. Попробуйте еще раз</h4>
+          )}
           {visibleCards.map((card) => {
             return <Card key={card.id} title={card.title} url={card.url} />;
           })}
