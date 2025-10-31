@@ -1,0 +1,19 @@
+.button_active {
+  background-color: #010005;
+  color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid #010005;
+  height: 40px;
+  min-width: 40px;
+  font-size: large;
+}
+
+.button_unactive {
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 5px;
+  border: 1px solid #e2e2e2;
+  height: 40px;
+  min-width: 40px;
+  font-size: medium;
+}
